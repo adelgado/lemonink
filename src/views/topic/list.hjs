@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+
+	 <table style='border: 1px'>
+		 <th>
+			 <td>Topic</td>
+			 <td>Creation Date</td>
+			 <td>Author</td>
+			 <td>Replies</td>
+		</th>
+		{{# topics}}
+		<tr>
+			<td>{{title}}</td>
+			<td>{{createdAd}}</td>
+			<td>{{createdBy}}</td>
+			<td>{{replyCount}}</td>
+		</tr>
+		{{/ topics}}
+  </body>
+</html>
