@@ -1,5 +1,2 @@
-- Implement optional user signup on the application view
-- Implement search
-- Implement memory backend storage
-- Implement view
-- Implement the FFI with libmicrohttpd
+- Bootstrap on the views'
+- redis as databse
