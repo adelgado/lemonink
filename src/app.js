@@ -4,6 +4,7 @@
 	, path    = require('path')
 	, redis   = require('redis')
 	, uuid    = require('node-uuid')
+	, db      = require('./db')
 
 	var app = express()
 
@@ -17,42 +18,6 @@
 
 		next()
 	})
-
-	var client = redis.createClient()
-
-	var db = {
-		createTopic: function(topic, callback) {
-			var id = uuid.v4()
-			client.hset("topic", id, JSON.stringify(topic), function(err, reply) {
-				client.quit()
-
-				if (reply === 1) {
-					callback(null, id)
-				}
-
-				if (reply === 0) {
-					callback(err)
-				}
-			})
-		},
-
-		getAllTopics : function(callback) {
-			client.hgetall("topic", function(err, topics) {
-				if (err) {
-					callback(err, {success: false})
-				}
-
-				var parsed_topics = []
-				for (var id in topics) {
-					var topic = JSON.parse(topics[id])
-					topic.id = id
-					parsed_topics.push(topic)
-				}
-
-				callback(null, parsed_topics)
-			})
-		}
-	}
 
 	//HTTP response codes
 	var HTTP = {
@@ -136,7 +101,13 @@
 	// Gets a topic with all the posts associated with it
 	app.get  ('/topic/:id',
 		function(req, res) {
-			res.send(HTTP.NOT_IMPLEMENTED)
+			db.getTopicById(req.params.id, function(err, topic) {
+				if (err) {
+					//
+				}
+				
+				res.render('topic/view', { topic : topic })
+			})
 		}
 	)
 
