@@ -8,16 +8,18 @@
 	</head>
 	<body ng-controller="IndexController">
 		<h1>{{ title }}</h1>
-		<p>Welcome to {{ title }}</p>
-		<table>
-			<th>
+
+		<table border=1>
+			<tr>
 				<td>Topic</td>
 				<td>Creation Date</td>
 				<td>Author</td>
 				<td>Replies</td>
-			</th>
+			</tr>
 			<tr ng-repeat="topic in topics">
-				<td>{{topic.title}}</td>
+				<td>
+					<a href="/topic/{{topic.id}}">{{topic.title}}</a>
+				</td>
 				<td>{{topic.createdAt}}</td>
 				<td>{{topic.createdBy}}</td>
 				<td>{{topic.replyCount}}</td>

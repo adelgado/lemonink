@@ -1,13 +1,7 @@
-function IndexController($scope) {
-	return $scope.topics = [
-	{ title      : "Teste 1"
-	, createdAt  : "oi"
-	, createdBy  : 'teste'
-	, replyCount : 'fd'
-	},
-	{ title      : "Teste 2"
-	, createdAt  : "oi"
-	, createdBy  : 'teste'
-	, replyCount : 'fd'
-	}]
+function IndexController($scope, $http) {
+	$http.get('topic/').success(function(response) {
+		$scope.topics = response.data
+	})
+
+	$scope.title = "Index"
 }

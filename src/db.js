@@ -1,12 +1,19 @@
-module.export = (function () { 
-	//var client = require('redis').createServer()
+module.exports = (function () { 
+	var client = require('redis').createClient()
+	  , uuid   = require('node-uuid')
+
+	var REDIS_HASH_KEY = "topic"
+
+	client.on('error', function(err) {
+		console.log('Erro do Redis: ' + err)
+	})
 
 	return {
 		createTopic: function(topic) {
 			var id = uuid.v4()
 
 			return function (errback, callback) {
-				client.hset("topic", id, JSON.stringify(topic), function(err, reply) {
+				client.hset(REDIS_HASH_KEY, id, JSON.stringify(topic), function(err, reply) {
 				client.quit()
 
 				if (reply === 1) {
@@ -21,26 +28,31 @@ module.export = (function () {
 		},  
 
 
-		getAllTopics : function(callback) {
-			client.hgetall("topic", function(err, topics) {
-				if (err) {
-					callback(err, {success: false})
-				}   
+		getAllTopics : function () {
+			return function (callback, errback) {
+				client.hgetall(REDIS_HASH_KEY, function(err, topics) {
+					if (err !== null) {
+						errback(err)
+						return
+					} 
+				
+					var parsed_topics = []
 
-				var parsed_topics = []
+					for (var id in topics) {
+						var topic = JSON.parse(topics[id])
+						topic.id = id
+						parsed_topics.push(topic)
+					}   
 
-				for (var id in topics) {
-					var topic = JSON.parse(topics[id])
-					topic.id = id
-					parsed_topics.push(topic)
-				}   
-
-				callback(null, parsed_topics)
-			})  
+					callback(parsed_topics)
+				}) 
+			}
 		},
 
-		getTopicById : function(id, callback) {
-			client.hget("topic", id, function(err, topic) {
+		getTopicById: function(id, callback) {
+			client.hget(REDIS_HASH_KEY, id, function(err, topic) {
+				console.log(err)
+				console.log(topic)
 				if (err) {
 					callback(err)
 				}
@@ -51,7 +63,5 @@ module.export = (function () {
 				callback(null, topic)
 			})
 		},
-
-
 	}
 })()

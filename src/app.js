@@ -3,30 +3,36 @@
 	, http    = require('http')
 	, path    = require('path')
 	, redis   = require('redis')
-	, uuid    = require('node-uuid')
 	, db      = require('./db')
 
 	var app = express()
 
+	//HTTP response codes
+	var HTTP = {
+		OK                    : 200,
+		CREATED               : 201,
+		BAD_REQUEST           : 400,
+		INTERNAL_SERVER_ERROR : 500,
+		NOT_IMPLEMENTED       : 501
+	}
+
 	app.use(function (req, res, next){
 		res.jsonSuccess = function (httpCode, data){
+			if (typeof httpCode === 'undefined') {
+				res.json(HTTP.INTERNAL_SERVER_ERROR)
+			}
+
 			res.json(httpCode, {success : true, data: data})
 		} 
-		res.jsonError = function(httpCode, data) {
+		res.jsonError = function(httpCode, errMsg) {
+			console.log(errMsg)
 			res.json(httpCode, {success: false, err: errMsg})	
 		}
 
 		next()
 	})
 
-	//HTTP response codes
-	var HTTP = {
-		OK              : 200,
-		CREATED         : 201,
-		BAD_REQUEST     : 400,
-		NOT_IMPLEMENTED : 501
-	}
-
+	
 	app.configure(function(){
 		app.set('port', process.env.PORT || 3000)
 		app.set('views', __dirname + '/views')
@@ -61,6 +67,16 @@
 		res.sendfile('views/index.html')
 	})
 
+	// Gets all the topics
+	app.get  ('/topic',
+		function (req, res) {
+			db.getAllTopics()(function (data) {
+				res.jsonSuccess(HTTP.OK, data)
+			}, function (error) {
+				res.jsonError(HTTP.INTERNAL_SERVER_ERROR, error)
+			})
+		}
+	)
 
 	// Creates a new discussion topic with one post associated with it
 	app.post ('/topic',
@@ -79,22 +95,12 @@
 	)
 
 	
-	// Gets all the topics
-	app.get  ('/topic',
-		function (req, res) {
-			db.getAllTopics(function(err, topics) {
-				if (err) {
-					//
-				}
-
-				res.render('topic/list')
-			})
-		}
-	)
+	
 
 	// Gets a topic with all the posts associated with it
 	app.get  ('/topic/:id',
 		function(req, res) {
+			console.log(db)
 			db.getTopicById(req.params.id, function(err, topic) {
 				if (err) {
 					//
