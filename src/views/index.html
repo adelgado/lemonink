@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html ng-app>
+	<head>
+		<title>{{ title }}</title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<script src='/javascripts/angular.js'></script>
+		<script src='/javascripts/controllers.js'></script>
+	</head>
+	<body ng-controller="IndexController">
+		<h1>{{ title }}</h1>
+		<p>Welcome to {{ title }}</p>
+		<table>
+			<th>
+				<td>Topic</td>
+				<td>Creation Date</td>
+				<td>Author</td>
+				<td>Replies</td>
+			</th>
+			<tr ng-repeat="topic in topics">
+				<td>{{topic.title}}</td>
+				<td>{{topic.createdAt}}</td>
+				<td>{{topic.createdBy}}</td>
+				<td>{{topic.replyCount}}</td>
+			</tr>
+		</table>
+	</body>
+</html>

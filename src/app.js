@@ -30,7 +30,6 @@
 	app.configure(function(){
 		app.set('port', process.env.PORT || 3000)
 		app.set('views', __dirname + '/views')
-		app.set('view engine', 'hjs')
 		app.use(express.favicon())
 		app.use(express.logger('dev'))
 		app.use(express.bodyParser())
@@ -58,7 +57,9 @@
 	}
 
 
-	app.get  ('/', function(req, res) { res.redirect('/topic') })
+	app.get  ('/', function(req, res) {
+		res.sendfile('views/index.html')
+	})
 
 
 	// Creates a new discussion topic with one post associated with it
@@ -86,9 +87,7 @@
 					//
 				}
 
-				res.render('topic/list', {
-					topics: topics
-				})
+				res.render('topic/list')
 			})
 		}
 	)
