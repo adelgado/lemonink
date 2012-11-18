@@ -1,5 +1,5 @@
 module.export = (function () { 
-	var client = require('redis').createServer()
+	//var client = require('redis').createServer()
 
 	return {
 		createTopic: function(topic) {
