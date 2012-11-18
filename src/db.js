@@ -2,20 +2,24 @@ module.export = (function () {
 	var client = require('redis').createServer()
 
 	return {
-		createTopic: function(topic, callback) {
+		createTopic: function(topic) {
 			var id = uuid.v4()
-			client.hset("topic", id, JSON.stringify(topic), function(err, reply) {
+
+			return function (errback, callback) {
+				client.hset("topic", id, JSON.stringify(topic), function(err, reply) {
 				client.quit()
 
 				if (reply === 1) {
-					callback(null, id) 
+					callback(id) 
 				}   
 
 				if (reply === 0) {
-					callback(err)
+					errback(err)
 				}   
-			})  
+			}) 
+			}
 		},  
+
 
 		getAllTopics : function(callback) {
 			client.hgetall("topic", function(err, topics) {

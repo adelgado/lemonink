@@ -70,12 +70,7 @@
 				author : req.body.author,
 				message : req.body.message
 			}
-
-			db.createTopic(topic, function(err, id) {
-				if (err) {
-					res.jsonError(HTTP.BAD_REQUEST, { error : err })
-				}
-
+			db.createTopic(topic)(res.error, function(id) {
 				res.header('Location', '/topic/' + id)
 				res.jsonSuccess(HTTP.CREATED, { id : id })
 			})
