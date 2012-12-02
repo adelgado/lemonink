@@ -1,29 +1,17 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="Lemonink">
 	<head>
-		<title>{{ title }}</title>
+		<title>Lemonink</title>
 		<link rel='stylesheet' href='/stylesheets/style.css' />
-		<script src='/javascripts/angular.js'></script>
-		<script src='/javascripts/controllers.js'></script>
+		<script src='/javascript/angular.js'></script>
+		<script src='/javascript/controller.js'></script>
+		<script src='/javascript/service/topic.js'></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-resource.min.js"></script>
 	</head>
-	<body ng-controller="IndexController">
-		<h1>{{ title }}</h1>
+	<body>
+		<div ng-view>
 
-		<table border=1>
-			<tr>
-				<td>Topic</td>
-				<td>Creation Date</td>
-				<td>Author</td>
-				<td>Replies</td>
-			</tr>
-			<tr ng-repeat="topic in topics">
-				<td>
-					<a href="/topic/{{topic.id}}">{{topic.title}}</a>
-				</td>
-				<td>{{topic.createdAt}}</td>
-				<td>{{topic.createdBy}}</td>
-				<td>{{topic.replyCount}}</td>
-			</tr>
-		</table>
+		</div>
 	</body>
 </html>

@@ -15,23 +15,6 @@
 		INTERNAL_SERVER_ERROR : 500,
 		NOT_IMPLEMENTED       : 501
 	}
-
-	app.use(function (req, res, next){
-		res.jsonSuccess = function (httpCode, data){
-			if (typeof httpCode === 'undefined') {
-				res.json(HTTP.INTERNAL_SERVER_ERROR)
-			}
-
-			res.json(httpCode, {success : true, data: data})
-		} 
-		res.jsonError = function(httpCode, errMsg) {
-			console.log(errMsg)
-			res.json(httpCode, {success: false, err: errMsg})	
-		}
-
-		next()
-	})
-
 	
 	app.configure(function(){
 		app.set('port', process.env.PORT || 3000)
@@ -51,17 +34,18 @@
 
 	function validateFields(fields) {
 		return function(req, res, next) {
-			fields.map(function(field) {
+			var missing = fields.filter(function(field) {
 				if (typeof(req.body[field]) === 'undefined' ||
 					req.body[field] === '') {
-					res.json(HTTP.BAD_REQUEST, { success : false })
+						return field
 				}
 			})
-
+			if(missing.length === 0 ){
+				res.json(HTTP.BAD_REQUEST, { error : "missing field: " + field })
+			}
 			next()
 		}
 	}
-
 
 	app.get  ('/', function(req, res) {
 		res.sendfile('views/index.html')
@@ -71,9 +55,9 @@
 	app.get  ('/topic',
 		function (req, res) {
 			db.getAllTopics()(function (data) {
-				res.jsonSuccess(HTTP.OK, data)
+				res.json(HTTP.OK, data)
 			}, function (error) {
-				res.jsonError(HTTP.INTERNAL_SERVER_ERROR, error)
+				res.json(HTTP.INTERNAL_SERVER_ERROR, error)
 			})
 		}
 	)
@@ -87,9 +71,9 @@
 				author : req.body.author,
 				message : req.body.message
 			}
-			db.createTopic(topic)(res.error, function(id) {
-				res.header('Location', '/topic/' + id)
-				res.jsonSuccess(HTTP.CREATED, { id : id })
+			db.createTopic(topic)(res.json, function(newtopic) {
+				res.header('Location', '/topic/' + newtopic.id)
+				res.json(HTTP.CREATED, newtopic)
 			})
 		}
 	)
@@ -106,7 +90,7 @@
 					//
 				}
 				
-				res.render('topic/view', { topic : topic })
+				res.json(HTTP.OK, topic)
 			})
 		}
 	)

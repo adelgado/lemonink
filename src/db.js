@@ -10,14 +10,17 @@ module.exports = (function () {
 
 	return {
 		createTopic: function(topic) {
-			var id = uuid.v4()
-
 			return function (errback, callback) {
+				var id = uuid.v4()
+
 				client.hset(REDIS_HASH_KEY, id, JSON.stringify(topic), function(err, reply) {
 				client.quit()
 
+				topic.id = id
+					console.log(topic)
+
 				if (reply === 1) {
-					callback(id) 
+					callback(topic) 
 				}   
 
 				if (reply === 0) {
@@ -36,6 +39,8 @@ module.exports = (function () {
 						return
 					} 
 				
+					console.log(topics)
+
 					var parsed_topics = []
 
 					for (var id in topics) {
@@ -43,6 +48,7 @@ module.exports = (function () {
 						topic.id = id
 						parsed_topics.push(topic)
 					}   
+
 
 					callback(parsed_topics)
 				}) 

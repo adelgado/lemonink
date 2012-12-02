@@ -1,0 +1,22 @@
+<table border=1>
+	<thead>
+		<tr>
+			<th>Topic</th>
+			<th>Creation Date</th>
+			<th>Author</th>
+			<th>Replies</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat='topic in topics'>
+			<td>
+				<a href="#/topic/{{topic.id}}">{{topic.title}}</a>
+			</td>
+			<td>{{topic.dateCreated}}</td>
+			<td>{{topic.author}}</td>
+			<td>{{topic.postCount}}</td>
+		</tr>
+	</tbody>
+</table>
+
+<a href='#/topics/new'>Novo Tópico</a>
