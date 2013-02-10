@@ -1,9 +1,15 @@
 <form>
-	<label for="title">Título</label>
-	<input value="testes" ng-model="topic.title" name="title" />
+	<fieldset>
+		<legend>New topic</legend>
 
-	<label for="message">Mensagem</label>
-	<textarea ng-model="topic.message" name="message">teste</textarea>
+		<label for="title">Title</label>
+		<input ng-model="topic.title" name="title" />
 
-	<button ng-click="create(topic)" />
+		<label for="message">Message</label>
+		<textarea ng-model="topic.message" name="message"></textarea>
+
+		<br />
+
+		<button ng-click="create(topic)" class="btn">Create</button>
+	</fieldset>
 </form>

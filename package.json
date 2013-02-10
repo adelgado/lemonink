@@ -1,0 +1,14 @@
+{
+  "name": "lemonink",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "cd src; nodemon app.js"
+  },
+  "dependencies": {
+    "express": "3.0.2",
+    "hjs": "*",
+	 "redis" : "*",
+	 "node-uuid" : "*"
+  }
+}
